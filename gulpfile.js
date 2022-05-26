@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
 
 
 
-gulp.task('sassToCSS', function() {
+gulp.task('sassToCSSmin', function() {
     return gulp.src('css/*.sass')
         .pipe(sass({
             errorLogToConsole: true,
@@ -23,9 +23,22 @@ gulp.task('sassToCSS', function() {
         .pipe(gulp.dest('css/'));
 });
 
+gulp.task('sassToCSS', function() {
+    return gulp.src('css/*.sass')
+        .pipe(sass({
+            errorLogToConsole: true,
+
+        }))
+        .on('error', console.error.bind(console))
+        .pipe(autoprefixer({
+            overrideBrowserslist: ['last 50 versions'],
+            cascade: false}))
+        .pipe(gulp.dest('css/'));
+});
+
 
 gulp.task('watchFiles', function() {
-    gulp.watch('css/*.sass', gulp.series('sassToCSS'));
+    gulp.watch('css/*.sass', gulp.series('sassToCSS'),gulp.series('sassToCSSmin'));
 });
 
 
